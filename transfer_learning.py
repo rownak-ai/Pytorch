@@ -5,6 +5,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 import torchvision
+from custom_dataset import CatsAndDogsDataset
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -20,6 +21,11 @@ class Identity(nn.Module):
 
     def forward(self,x):
         return x
+    
+dataset = CatsAndDogsDataset(csv_file='cats_dogs.csv',root_dir='cats_dogs_resized',transform=transforms.ToTensor())
+train_set,test_set = torch.utils.data.random_split(dataset,[6,4])
+train_loader = DataLoader(dataset=train_set,batch_size=batch_size,shuffle=True)
+test_loader = DataLoader(dataset=test_set,batch_size=batch_size,shuffle=True)
 
 model = torchvision.models.vgg16(pretrained=True)
 
